@@ -18,6 +18,7 @@ app.config['MYSQL_PORT'] = 3306
 
 # Instanciando o Database para acesso ao banco
 db = MySQL(app)
+
 usuario_dao = UsuarioDao(db)
 
 def usuario_logado():
@@ -28,15 +29,16 @@ def usuario_logado():
 
 @app.route('/')
 def home():
-    return 'Hello, World!'
+    if usuario_logado():
+        return render_template('index.html')
+    else:
+        return redirect(url_for('login', proxima=url_for('home')))
 
 
 @app.route('/usuario/novo')
 def novo_usuario():
-    if usuario_logado():
-        return render_template('novo_usuario.html', titulo='Cadastro')
-    else:
-        return redirect(url_for('login', proxima=url_for('novo_usuario')))
+    return render_template('novo_usuario.html', titulo='Cadastro')
+
 
 
 @app.route('/usuario/criar', methods=['post', ])
@@ -45,10 +47,14 @@ def criar_usuario():
     email = request.form['email']
     senha = request.form['senha']
 
+    usuario_cadastrado = usuario_dao.busca_por_email(email)
+
+    if usuario_cadastrado:
+        flash('E-mail ' + email + ' já cadastrado!')
+        return redirect(url_for('novo_usuario'))
+
     usuario = Usuario(nome, email, senha)
-
-    usuario = usuario_dao.salvar(usuario)
-
+    usuario_dao.salvar(usuario)
     return redirect(url_for('home'))
 
 @app.route('/login')
