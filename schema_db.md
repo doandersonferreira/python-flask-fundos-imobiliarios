@@ -22,7 +22,7 @@ CREATE TABLE `ativo` (
       `ticker` varchar(8) COLLATE utf8_bin NOT NULL,
       `nome` varchar(50) COLLATE utf8_bin NOT NULL,
       `cnpj` varchar(14) COLLATE utf8_bin NOT NULL,
-      `id_administrador` int(11),
+      `id_administrador` int(11) NOT NULL,
       PRIMARY KEY (`id`),
       FOREIGN KEY (id_administrador) REFERENCES administrador_ativo(id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

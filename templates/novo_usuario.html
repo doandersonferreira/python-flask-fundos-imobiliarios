@@ -1,0 +1,26 @@
+<!-- Diretivas para uso do Template Engine (JINJA2) -->
+{% extends "template.html" %}
+{% block conteudo %}
+      <form action="{{ url_for('criar_usuario')}}" method="post" enctype="multipart/form-data">
+        <fieldset>
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="conferesenha">Redigite a Senha</label>
+            <input type="password" id="conferesenha" name="conferesenha" class="form-control">
+          </div>
+          <a href="{{ url_for('home') }}" class="btn btn-primary">Voltar</a>
+          <button type="submit" class="btn btn-primary btn-salvar">Salvar</button>
+        </fieldset>
+      </form>
+{% endblock %}
