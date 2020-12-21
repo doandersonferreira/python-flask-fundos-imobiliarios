@@ -27,36 +27,6 @@ def usuario_logado():
     else:
         return True
 
-@app.route('/')
-def home():
-    if usuario_logado():
-        return render_template('index.html')
-    else:
-        return redirect(url_for('login', proxima=url_for('home')))
-
-
-@app.route('/usuario/novo')
-def novo_usuario():
-    return render_template('novo_usuario.html', titulo='Cadastro')
-
-
-
-@app.route('/usuario/criar', methods=['post', ])
-def criar_usuario():
-    nome = request.form['nome']
-    email = request.form['email']
-    senha = request.form['senha']
-
-    usuario_cadastrado = usuario_dao.busca_por_email(email)
-
-    if usuario_cadastrado:
-        flash('E-mail ' + email + ' já cadastrado!')
-        return redirect(url_for('novo_usuario'))
-
-    usuario = Usuario(nome, email, senha)
-    usuario_dao.salvar(usuario)
-    return redirect(url_for('home'))
-
 @app.route('/login')
 def login():
     # obter um query param da url
@@ -87,5 +57,49 @@ def logout():
     session['usuario_logado'] = None
     flash('Nenhum usuário logado!')
     return redirect(url_for('login'))
+
+@app.route('/')
+def home():
+    if usuario_logado():
+        return render_template('index.html')
+    else:
+        return redirect(url_for('login', proxima=url_for('home')))
+
+
+@app.route('/usuario/novo')
+def novo_usuario():
+    return render_template('novo_usuario.html', titulo='Cadastro')
+
+
+
+@app.route('/usuario/criar', methods=['post', ])
+def criar_usuario():
+    nome = request.form['nome']
+    email = request.form['email']
+    senha = request.form['senha']
+
+    usuario_cadastrado = usuario_dao.busca_por_email(email)
+
+    if usuario_cadastrado:
+        flash('E-mail ' + email + ' já cadastrado!')
+        return redirect(url_for('novo_usuario'))
+
+    usuario = Usuario(nome, email, senha)
+    usuario_dao.salvar(usuario)
+    return redirect(url_for('home'))
+
+
+@app.route('/operacao/novo')
+def nova_operacao():
+    if usuario_logado():
+        return render_template('nova_operacao.html', titulo='Registro de Operações')
+    else:
+        return redirect(url_for('login', proxima=url_for('nova_operacao')))
+
+
+@app.route('/operacao/criar')
+def criar_operacao():
+    pass
+
 
 app.run(debug=True)
