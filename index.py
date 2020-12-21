@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 from models.Usuario import Usuario
-from daos.usuario_dao import UsuarioDao
+from daos.UsuarioDao import UsuarioDao
+from daos.AtivoDao import AtivoDao
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app.config['MYSQL_PORT'] = 3306
 db = MySQL(app)
 
 usuario_dao = UsuarioDao(db)
+ativo_dao = AtivoDao(db)
 
 def usuario_logado():
     if ('usuario_logado' not in session or session['usuario_logado'] == None):
@@ -91,8 +93,10 @@ def criar_usuario():
 
 @app.route('/operacao/novo')
 def nova_operacao():
+
     if usuario_logado():
-        return render_template('nova_operacao.html', titulo='Registro de Operações')
+        ativos = ativo_dao.buscar()
+        return render_template('nova_operacao.html', titulo='Registro de Operações', ativos = ativos)
     else:
         return redirect(url_for('login', proxima=url_for('nova_operacao')))
 
