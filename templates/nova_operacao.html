@@ -7,7 +7,7 @@
             <label for="ativos">Ativo</label>
             <select class="form-control" id="ativos" name="ativo">
               {% for ativo in ativos %}
-              <option value={{ ativo.id }}}}>{{ ativo.ticker }} - {{ ativo.nome }}</option>
+              <option value={{ ativo.id }}>{{ ativo.ticker }} - {{ ativo.nome }}</option>
               {% endfor %}
             </select>
           </div>

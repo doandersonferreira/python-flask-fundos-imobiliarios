@@ -36,7 +36,7 @@ CREATE TABLE `operacao` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `tipo` varchar(1) COLLATE utf8_bin NOT NULL,
       `data` varchar(10) COLLATE utf8_bin NOT NULL,
-      `valor_cota` int(10) COLLATE utf8_bin NOT NULL,
+      `valor_cota` float(5,2) COLLATE utf8_bin NOT NULL,
       `quantidade` int(4) COLLATE utf8_bin NOT NULL,
       `id_ativo` int(11) NOT NULL,
       `id_usuario` int(11) NOT NULL,

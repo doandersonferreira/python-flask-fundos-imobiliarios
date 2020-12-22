@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 from models.Usuario import Usuario
+from models.Operacao import Operacao
 from daos.UsuarioDao import UsuarioDao
 from daos.AtivoDao import AtivoDao
+from daos.OperacaoDao import OperacaoDao
 
 
 app = Flask(__name__)
@@ -22,6 +24,8 @@ db = MySQL(app)
 
 usuario_dao = UsuarioDao(db)
 ativo_dao = AtivoDao(db)
+operacao_dao = OperacaoDao(db)
+
 
 def usuario_logado():
     if ('usuario_logado' not in session or session['usuario_logado'] == None):
@@ -47,12 +51,9 @@ def autenticar():
             session['usuario_logado'] = usuario.id
             flash('Bem vindo, ' + usuario.nome + ' !')
             proxima_pagina = request.form['proxima']
-
             return redirect(proxima_pagina)
-        else:
-            flash('Usuário ou senha incorretos. Tente novamente!')
-            return redirect(url_for('login'))
-    return usuario.senha
+    flash('Usuário ou senha incorretos. Tente novamente!')
+    return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
@@ -88,6 +89,7 @@ def criar_usuario():
 
     usuario = Usuario(nome, email, senha)
     usuario_dao.salvar(usuario)
+    flash('Usuário cadastrado com sucesso!')
     return redirect(url_for('home'))
 
 
@@ -101,9 +103,18 @@ def nova_operacao():
         return redirect(url_for('login', proxima=url_for('nova_operacao')))
 
 
-@app.route('/operacao/criar')
+@app.route('/operacao/criar', methods=['post', ])
 def criar_operacao():
-    pass
+    ativo = int(request.form['ativo'])
+    tipo = request.form['tipo']
+    data = request.form['data']
+    quantidade = int(request.form['quantidade'])
+    valor = request.form['valor']
 
+    operacao = Operacao(ativo, tipo, data, quantidade, valor)
+
+    operacao_dao.salvar(operacao)
+
+    return redirect(url_for('home'))
 
 app.run(debug=True)
