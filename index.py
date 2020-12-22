@@ -48,30 +48,31 @@ def autenticar():
 
     if usuario:
         if usuario.senha == senha:
-            session['usuario_logado'] = usuario.id
+            session['usuario_logado'] = [usuario.id, usuario.nome]
             flash('Bem vindo, ' + usuario.nome + ' !')
             proxima_pagina = request.form['proxima']
             return redirect(proxima_pagina)
     flash('Usuário ou senha incorretos. Tente novamente!')
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
     session['usuario_logado'] = None
     flash('Nenhum usuário logado!')
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 @app.route('/')
 def home():
-    if usuario_logado():
-        return render_template('index.html')
-    else:
-        return redirect(url_for('login', proxima=url_for('home')))
+    return render_template('index.html')
+
 
 
 @app.route('/usuario/novo')
 def novo_usuario():
-    return render_template('novo_usuario.html', titulo='Cadastro')
+    if usuario_logado():
+        return render_template('novo_usuario.html', titulo='Cadastro')
+    else:
+        return redirect(url_for('login', proxima=url_for('novo_usuario')))
 
 
 

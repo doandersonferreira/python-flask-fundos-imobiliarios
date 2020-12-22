@@ -1,6 +1,19 @@
 <!-- Diretivas para uso do Template Engine (JINJA2) -->
 {% extends "template.html" %}
 {% block conteudo %}
-<h1>Seja bem vindo!</h1>
-Operações: <a href="/operacao/novo" class="btn btn-primary">Registrar</a>
+
+<div {{ 'hidden' if session['usuario_logado'] != None }} >
+    <h2>Olá, investidor(a)! Seja bem vindo(a)!</h2>
+    <p>Essa aplicação tem por objetivo principal permitir o gerenciamento de ativos de Fundo de Investimentos Imobiliários (FIIs).</p>
+    <p>Por meio dela, será possível visualizar e gerenciar a sua carteira de ativos, por meio de cadastro de operações, informações de Imposto de Renda, etc. </p>
+    <p>Faça <a href="/login" class="btn btn-primary">Login</a> ou <a href="/usuario/novo" class="btn btn-primary">Cadastre-se</a></p>
+</div>
+
+<div {{ 'hidden' if session['usuario_logado'] == None }} >
+    <h2>
+        Olá, {{ session['usuario_logado'][1]}}!
+        <a href="/logout" class="btn btn-primary">Logout</a>
+    </h2>
+</div>
+
 {% endblock %}
