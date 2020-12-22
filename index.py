@@ -63,16 +63,18 @@ def logout():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    ativos=None
+    if session['usuario_logado']:
+        id_usuario_logado = session['usuario_logado'][0]
+        ativos = operacao_dao.carteira_sumarizada(id_usuario_logado)
+    return render_template('index.html', ativos=ativos)
 
 
 
 @app.route('/usuario/novo')
 def novo_usuario():
-    if usuario_logado():
-        return render_template('novo_usuario.html', titulo='Cadastro')
-    else:
-        return redirect(url_for('login', proxima=url_for('novo_usuario')))
+    return render_template('novo_usuario.html', titulo='Cadastro')
+
 
 
 
