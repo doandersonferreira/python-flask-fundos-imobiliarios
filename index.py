@@ -5,6 +5,7 @@ from models.Operacao import Operacao
 from daos.UsuarioDao import UsuarioDao
 from daos.AtivoDao import AtivoDao
 from daos.OperacaoDao import OperacaoDao
+import requests
 
 
 app = Flask(__name__)
@@ -66,9 +67,9 @@ def home():
     ativos=None
     if session['usuario_logado']:
         id_usuario_logado = session['usuario_logado'][0]
-        ativos = operacao_dao.carteira_sumarizada(id_usuario_logado)
+        dados = operacao_dao.carteira_sumarizada(id_usuario_logado)
+        ativos = transforma_sumarizado(dados)
     return render_template('index.html', ativos=ativos)
-
 
 
 @app.route('/usuario/novo')
@@ -119,5 +120,36 @@ def criar_operacao():
     operacao_dao.salvar(operacao)
 
     return redirect(url_for('home'))
+
+def transforma_sumarizado(dados):
+    ativos = []
+
+    for dado in dados:
+        ativo = dado[0]
+        quantidade = int(dado[1])
+        valor_aplicado = dado[2]
+        preco_medio_cota = valor_aplicado / quantidade
+        # valor_atual_cota = obter_quote(ativo)
+        # valor_total_atual = quantidade * valor_atual_cota
+        # valorizacao = ((valor_total_atual*100)/valor_aplicado)-100
+
+        ativos.append({
+            'ativo':ativo,
+            'quantidade':quantidade,
+            'valor_aplicado':"{:.2f}".format(valor_aplicado),
+            'preco_medio_cota':"{:.2f}".format(preco_medio_cota)
+            # 'valor_atual_cota': "{:.2f}".format(valor_atual_cota),
+            # 'valor_total_atual': "{:.2f}".format(valor_total_atual),
+            # 'valorizacao':"{:.2f}".format(valorizacao)
+        })
+
+    return ativos
+
+def obter_quote(ativo):
+    ativo = ativo + '.SA'
+    request = requests.get(f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={ativo}&apikey=TY0JZ9D31XLVDW4B')
+    dados = request.json()
+    preco_atual = dados['Global Quote']['05. price']
+    return float(preco_atual)
 
 app.run(debug=True)

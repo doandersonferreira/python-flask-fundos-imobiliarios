@@ -21,9 +21,12 @@
             <thead>
                 <tr>
                     <th>Ativo</th>
-                    <th>Cotas</th>
+                    <th>Quantidade</th>
                     <th>Total Aplicado</th>
-                    <th>Preço Médio</th>
+                    <th>Preço Médio da Cota</th>
+<!--                    <th>Valor Atual da Cota</th>
+                    <th>Valor Total</th>
+                    <th>Valorização</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -31,9 +34,12 @@
             {% for ativo in ativos %}
                 <tr>
                     <td>{{ ativo['ativo'] }}</td>
-                    <td>{{ ativo['cotas'] }}</td>
+                    <td>{{ ativo['quantidade'] }}</td>
                     <td>{{ ativo['valor_aplicado'] }}</td>
-                    <td>{{ ativo['preco_medio'] }}</td>
+                    <td>{{ ativo['preco_medio_cota'] }}</td>
+<!--                    <td>{{ ativo['valor_atual_cota'] }}</td>
+                    <td>{{ ativo['valor_total_atual'] }}</td>
+                    <td>{{ ativo['valorizacao'] }}</td>-->
                 </tr>
             {% endfor %}
             </tbody>

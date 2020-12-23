@@ -42,21 +42,5 @@ class OperacaoDao:
         cursor.execute(SQL_AGREGADO_USUARIO, (id_usuario, ))
         dados = cursor.fetchall()
 
-        return self.transforma_sumarizado(dados)
+        return dados
 
-    def transforma_sumarizado(self, dados):
-        ativos = []
-
-        for dado in dados:
-            ativo = dado[0]
-            cotas = int(dado[1])
-            valor_aplicado = dado[2]
-            preco_medio = valor_aplicado / cotas
-
-            ativos.append({
-                'ativo':ativo,
-                'cotas':cotas,
-                'valor_aplicado':"{:.2f}".format(valor_aplicado),
-                'preco_medio':"{:.2f}".format(preco_medio)})
-
-        return ativos
